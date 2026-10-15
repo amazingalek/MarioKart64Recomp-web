@@ -85,3 +85,46 @@ plays `tools/shader_plan.json` with N64Recomp-browser's `tools/record_shaders.mj
 `?record-shaders` prints every shader the game asks for, and the plan reaches each part of the game by code
 (`tools/shader_survey.js`, which starts any course in any mode the way the pause menu's Retry does and hands the karts
 to the game's own driving). Its header says what was played and what wasn't.
+
+## What was played
+
+The page from GitHub Pages (main 9f6bcf3, N64Recomp-browser 28a5f14), cold, on an RTX 2070, an idle host, 2026-10-15,
+Chrome 155 headless and Firefox 158, by N64Recomp-browser's `tools/play_page.mjs` with `tools/play_plan.json`: the
+launcher, Load ROM, the logos and the title, the menus to a 50cc Grand Prix, then 40 s of Luigi Raceway on the kart AI.
+
+```
+                  shader waits                      presents a second   sound short   WebGPU errors
+1256x645
+  Chrome          none                              59.6 (53-60)        0             0
+  Firefox         0.4 s for the boot's 8 before     59.2 (31-60)        0             0
+                  the first frame, 1.6 s for Luigi
+                  Raceway's 35, ~0.3 s in ones and
+                  twos through the menus
+3840x2000
+  Chrome          none                              59.6 (53-60)        0             0
+  Firefox         0.5 s, 1.6 s, as above            59.0 (28-60)        1,041, in the   0
+                                                                        course's wait
+```
+
+The game draws 30 frames a second in a race, which RT64 interpolates to the display's rate. The build before it was
+published, served locally, played the same (Chrome 59.6, Firefox 59.4 after waits of 0.4 and 1.5 s). Chrome builds the
+whole list behind the game, so it never waits; Firefox builds none during play, and waits for a section when the game
+gets there. A shot of the race in each browser shows the jumbotron over the start line drawing the player's kart.
+
+Also played in headless Chrome 155 on local builds: every course and arena through the shader plan, Versus with two,
+three and four players (59.1-59.4 presents a second with four), a four-player battle in Big Donut, Time Trials, the
+results, the award ceremony and the credits, with no WebGPU errors.
+
+**The boot.** Upstream's patches write every frame's display list to a larger pool of their own (`gfxPoolExtended`)
+and point its task there, but the boot's first list was written to the game's own pool, so the first task pointed RT64
+at an empty one, which it read on into the pool where the game was already writing the next frame. About one boot in
+twenty on the page hung (an empty display list) or crashed (a microcode load read from garbage). `patches/gfx_config.c`
+patches `rendering_init` to write it where the task points: 80 boots in a row in headless Chrome after it, none failed.
+
+**Render to RAM** stays on, with the exact copy: the jumbotron at Luigi Raceway and Wario Stadium is the last frame,
+which the CPU copies out of RDRAM (`copy_framebuffer`). The late copy (`set_render_to_ram_late`, which waits less for
+the GPU on some games) measured the same here: a race 59.6 presents a second either way, four players 59.1 exact and
+58.8 late (headless Chrome 155, a busy host, the game's 30 frames a second), so the page keeps the exact one.
+
+**The shader list**, `src/rt64_shaders.txt`: 813 descriptions, 136 shaders and 112 pipelines in 27 sections (the boot 8,
+the menus 8, each course, the arenas, Versus, Time Trials, the results, the ceremony, the credits).

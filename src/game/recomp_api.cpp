@@ -2,11 +2,10 @@
 
 #include "recomp.h"
 #include "librecomp/overlays.hpp"
-#include "zelda_config.h"
-#include "recomp_input.h"
-#include "recomp_ui.h"
-#include "zelda_render.h"
-#include "zelda_sound.h"
+#include "mk64.h"
+#include "recompinput/recompinput.h"
+#include "recompui/recompui.h"
+#include "recompui/renderer.h"
 #include "librecomp/helpers.hpp"
 // #include "../patches/input.h"
 // #include "../patches/graphics.h"
@@ -15,7 +14,7 @@
 #include "ultramodern/config.hpp"
 
 extern "C" void recomp_update_inputs(uint8_t* rdram, recomp_context* ctx) {
-    recomp::poll_inputs();
+    recompinput::poll_inputs();
 }
 
 extern "C" void recomp_sleep_miliseconds(uint8_t* rdram, recomp_context* ctx) {
@@ -54,14 +53,14 @@ extern "C" void recomp_get_gyro_deltas(uint8_t* rdram, recomp_context* ctx) {
     float* x_out = _arg<0, float*>(rdram, ctx);
     float* y_out = _arg<1, float*>(rdram, ctx);
 
-    recomp::get_gyro_deltas(x_out, y_out);
+    recompinput::get_gyro_deltas(0, x_out, y_out);
 }
 
 extern "C" void recomp_get_mouse_deltas(uint8_t* rdram, recomp_context* ctx) {
     float* x_out = _arg<0, float*>(rdram, ctx);
     float* y_out = _arg<1, float*>(rdram, ctx);
 
-    recomp::get_mouse_deltas(x_out, y_out);
+    recompinput::get_mouse_deltas(x_out, y_out);
 }
 
 extern "C" void recomp_powf(uint8_t* rdram, recomp_context* ctx) {
@@ -105,36 +104,37 @@ extern "C" void recomp_get_aspect_ratio(uint8_t* rdram, recomp_context* ctx) {
     }
 }
 
+// Zelda 64: Recompiled's settings, which upstream carried over and never showed: answered with the defaults it kept.
 extern "C" void recomp_get_targeting_mode(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, static_cast<int>(zelda64::get_targeting_mode()));
+    _return(ctx, 0); // Switch
 }
 
 extern "C" void recomp_get_bgm_volume(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, zelda64::get_bgm_volume() / 100.0f);
+    _return(ctx, mk64::get_bgm_volume() / 100.0f);
 }
 
 extern "C" void recomp_set_bgm_volume_100(uint8_t* rdram, recomp_context* ctx) {
-    zelda64::set_bgm_volume(100);
+    mk64::set_bgm_volume(100);
 }
 
 extern "C" void recomp_set_bgm_volume_59(uint8_t* rdram, recomp_context* ctx) {
-    zelda64::set_bgm_volume(59);
+    mk64::set_bgm_volume(59);
 }
 
 extern "C" void recomp_set_bgm_volume_0(uint8_t* rdram, recomp_context* ctx) {
-    zelda64::set_bgm_volume(0);
+    mk64::set_bgm_volume(0);
 }
 
 extern "C" void recomp_get_sfx_volume(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, zelda64::get_sfx_volume() / 100.0f);
+    _return(ctx, mk64::get_sfx_volume() / 100.0f);
 }
 
 extern "C" void recomp_get_env_volume(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, zelda64::get_env_volume() / 100.0f);
+    _return(ctx, mk64::get_env_volume() / 100.0f);
 }
 
 extern "C" void recomp_get_low_health_beeps_enabled(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, static_cast<u32>(zelda64::get_low_health_beeps_enabled()));
+    _return(ctx, static_cast<u32>(1));
 }
 
 extern "C" void recomp_time_us(uint8_t* rdram, recomp_context* ctx) {
@@ -142,7 +142,7 @@ extern "C" void recomp_time_us(uint8_t* rdram, recomp_context* ctx) {
 }
 
 extern "C" void recomp_autosave_enabled(uint8_t* rdram, recomp_context* ctx) {
-    _return(ctx, static_cast<s32>(zelda64::get_autosave_mode() == zelda64::AutosaveMode::On));
+    _return(ctx, static_cast<s32>(1));
 }
 
 extern "C" void recomp_load_overlays(uint8_t * rdram, recomp_context * ctx) {
@@ -154,7 +154,7 @@ extern "C" void recomp_load_overlays(uint8_t * rdram, recomp_context * ctx) {
 }
 
 extern "C" void recomp_high_precision_fb_enabled(uint8_t * rdram, recomp_context * ctx) {
-    _return(ctx, static_cast<s32>(zelda64::renderer::RT64HighPrecisionFBEnabled()));
+    _return(ctx, static_cast<s32>(recompui::renderer::RT64HighPrecisionFBEnabled()));
 }
 
 extern "C" void recomp_get_resolution_scale(uint8_t* rdram, recomp_context* ctx) {
@@ -165,24 +165,22 @@ extern "C" void recomp_get_inverted_axes(uint8_t* rdram, recomp_context* ctx) {
     s32* x_out = _arg<0, s32*>(rdram, ctx);
     s32* y_out = _arg<1, s32*>(rdram, ctx);
 
-    zelda64::CameraInvertMode mode = zelda64::get_camera_invert_mode();
-
-    *x_out = (mode == zelda64::CameraInvertMode::InvertX || mode == zelda64::CameraInvertMode::InvertBoth);
-    *y_out = (mode == zelda64::CameraInvertMode::InvertY || mode == zelda64::CameraInvertMode::InvertBoth);
+    // Invert Y
+    *x_out = 0;
+    *y_out = 1;
 }
 
 extern "C" void recomp_get_analog_inverted_axes(uint8_t* rdram, recomp_context* ctx) {
     s32* x_out = _arg<0, s32*>(rdram, ctx);
     s32* y_out = _arg<1, s32*>(rdram, ctx);
 
-    zelda64::CameraInvertMode mode = zelda64::get_analog_camera_invert_mode();
-
-    *x_out = (mode == zelda64::CameraInvertMode::InvertX || mode == zelda64::CameraInvertMode::InvertBoth);
-    *y_out = (mode == zelda64::CameraInvertMode::InvertY || mode == zelda64::CameraInvertMode::InvertBoth);
+    // None
+    *x_out = 0;
+    *y_out = 0;
 }
 
 extern "C" void recomp_analog_cam_enabled(uint8_t* rdram, recomp_context* ctx) {
-    _return<s32>(ctx, zelda64::get_analog_cam_mode() == zelda64::AnalogCamMode::On);
+    _return<s32>(ctx, 0); // Off
 }
 
 extern "C" void recomp_get_camera_inputs(uint8_t* rdram, recomp_context* ctx) {
@@ -194,7 +192,7 @@ extern "C" void recomp_get_camera_inputs(uint8_t* rdram, recomp_context* ctx) {
 
     float x, y;
 
-    recomp::get_right_analog(&x, &y);
+    recompinput::get_right_analog(0, &x, &y);
 
     float magnitude = sqrtf(x * x + y * y);
 
@@ -214,5 +212,26 @@ extern "C" void recomp_get_camera_inputs(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_set_right_analog_suppressed(uint8_t* rdram, recomp_context* ctx) {
     s32 suppressed = _arg<0, s32>(rdram, ctx);
 
-    recomp::set_right_analog_suppressed(suppressed);
+    recompinput::set_right_analog_suppressed(suppressed);
+}
+
+// Zelda 64: Recompiled's warp and time of day, which upstream's patches declare and never call: nothing is pending.
+extern "C" void recomp_get_pending_warp(uint8_t* rdram, recomp_context* ctx) {
+    _return<uint32_t>(ctx, 0xFFFF);
+}
+
+extern "C" void recomp_get_pending_set_time(uint8_t* rdram, recomp_context* ctx) {
+    _return<uint32_t>(ctx, 0xFFFF);
+}
+
+// The Controller Pak: the runtime this is built on answers every other osPfs call with no pak plugged in
+// (librecomp's pak.cpp), so these two say the same. Time Trials keeps its ghosts in the Controller Pak, so they
+// aren't saved.
+extern "C" void osPfsIsPlug_recomp(uint8_t* rdram, recomp_context* ctx) {
+    MEM_B(0, ctx->r5) = 0; // *pattern: no pak in any port
+    ctx->r2 = 0;
+}
+
+extern "C" void osPfsInit_recomp(uint8_t* rdram, recomp_context* ctx) {
+    ctx->r2 = 1; // PFS_ERR_NOPACK
 }

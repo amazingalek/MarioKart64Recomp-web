@@ -38,6 +38,24 @@
 
 #include "PR/ultratypes.h"
 #include "rt64_extended_gbi.h"
+
+// The rt64 the web support is built on gives a matrix group two more components (texture coordinates and look-at).
+// These patches were written for one without them and leave them skipped, so each command comes out as it did there.
+#undef gEXMatrixGroup
+#undef gEXMatrixGroupSimple
+#undef gEXMatrixGroupDecomposed
+#define gEXMatrixGroup(cmd, id, mode, push, proj, pos, rot, scale, skew, persp, vert, tile, order, edit, aspect) \
+    G_EX_COMMAND2(cmd, \
+        PARAM(RT64_EXTENDED_OPCODE, 8, 24) | PARAM(G_EX_MATRIXGROUP_V1, 24, 0), \
+        id, \
+        PARAM(push, 1, 0) | PARAM((proj) != 0, 1, 1) | PARAM(mode, 1, 2) | PARAM(pos, 2, 3) | PARAM(rot, 2, 5) | PARAM(scale, 2, 7) | PARAM(skew, 2, 9) | PARAM(persp, 2, 11) | PARAM(vert, 2, 13) | PARAM(tile, 2, 15) | PARAM(order, 2, 17) | PARAM(edit, 1, 19) | PARAM(aspect, 2, 20) | PARAM(G_EX_COMPONENT_SKIP, 2, 22) | PARAM(G_EX_COMPONENT_SKIP, 2, 24), \
+        0 \
+    )
+#define gEXMatrixGroupSimple(cmd, id, push, proj, pos, rot, persp, vert, tile, order, edit) \
+    gEXMatrixGroup(cmd, id, G_EX_INTERPOLATE_SIMPLE, push, proj, pos, rot, G_EX_COMPONENT_SKIP, G_EX_COMPONENT_SKIP, persp, vert, tile, order, edit, G_EX_ASPECT_AUTO)
+#define gEXMatrixGroupDecomposed(cmd, id, push, proj, pos, rot, scale, skew, persp, vert, tile, order, edit) \
+    gEXMatrixGroup(cmd, id, G_EX_INTERPOLATE_DECOMPOSE, push, proj, pos, rot, scale, skew, persp, vert, tile, order, edit, G_EX_ASPECT_AUTO)
+
 #include "PR/gbi.h"
 #include "PR/os_thread.h"
 #include "PR/os_message.h"

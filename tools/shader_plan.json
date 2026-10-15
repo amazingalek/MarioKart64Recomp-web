@@ -1,0 +1,1184 @@
+{
+ "page": "MarioKart64Recompiled.html",
+ "header": [
+  "The RT64 shaders the web page builds: one shader description a line, other mode L and H, color combiner L and H,",
+  "flags, in hex. RT64 specializes each one's WGSL when the page is built and builds them with the game waiting: those",
+  "above the first \"section\" line before the game starts, and a section when a frame first wants 4 of its shaders,",
+  "so that nothing draws with the ubershader, which integrated graphics can't afford (N64Recomp-browser's README,",
+  "\"Give RT64 a list of the game's shaders\").",
+  "",
+  "Recorded by code, not by playing: bash tools/record_shaders.sh (its header says how) runs N64Recomp-browser's",
+  "tools/record_shaders.mjs with tools/shader_plan.json, which loads the page fresh for each section and has",
+  "tools/shader_survey.js start each race the way the pause menu's Retry does, with the kart AI driving. Section 0 is",
+  "the launcher, the logos and the title; then the menus to a Grand Prix's first race, each course at 150cc for a lap",
+  "or more, each battle arena with four players, Versus with two and three, Time Trials, a race's finish and results,",
+  "the award ceremony and the credits. Not recorded: the menus past those a Grand Prix passes through (options, data,",
+  "records), mirror mode, ghosts, and what a course draws further in than the AI drove. Flags follow settings",
+  "(filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording again."
+ ],
+ "load": [
+  [
+   "until",
+   "Device Name",
+   60000
+  ],
+  [
+   "wait",
+   6000
+  ]
+ ],
+ "setup": [
+  [
+   "rom",
+   628,
+   364
+  ],
+  [
+   "wait",
+   4000
+  ]
+ ],
+ "start": [
+  [
+   "click",
+   628,
+   364
+  ],
+  [
+   "wait",
+   3000
+  ],
+  [
+   "evalFile",
+   "shader_survey.js"
+  ],
+  [
+   "eval",
+   "untilMenu(10, 60000)"
+  ],
+  [
+   "wait",
+   3000
+  ]
+ ],
+ "sections": [
+  {
+   "name": "menus",
+   "steps": [
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     false
+    ],
+    [
+     "wait",
+     1000
+    ]
+   ]
+  },
+  {
+   "name": "luigi",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 0, \"course\": 0, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     50000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "moomoo",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 0, \"course\": 1, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     45000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "koopa",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 0, \"course\": 2, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     45000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "kalimari",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 0, \"course\": 3, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     55000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "toad",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 1, \"course\": 0, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     70000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "frappe",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 1, \"course\": 1, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     45000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "choco",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 1, \"course\": 2, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     45000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "mario",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 1, \"course\": 3, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "wario",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 2, \"course\": 0, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     75000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "sherbet",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 2, \"course\": 1, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     45000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "royal",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 2, \"course\": 2, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     70000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "bowser",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 2, \"course\": 3, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "dkjungle",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 3, \"course\": 0, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "yoshi",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 3, \"course\": 1, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "banshee",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 3, \"course\": 2, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "rainbow",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 3, \"course\": 3, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "bigdonut",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 3, \"players\": 4, \"screen\": 3, \"id\": 19})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "blockfort",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 3, \"players\": 4, \"screen\": 3, \"id\": 15})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "doubledeck",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 3, \"players\": 4, \"screen\": 3, \"id\": 17})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "skyscraper",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 3, \"players\": 4, \"screen\": 3, \"id\": 16})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "versus",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 2, \"players\": 2, \"screen\": 1, \"cc\": 2, \"id\": 9})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     25000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "eval",
+     "race({\"mode\": 2, \"players\": 3, \"screen\": 3, \"cc\": 2, \"id\": 6})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     25000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "trials",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 1, \"cc\": 2, \"id\": 0})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     40000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "results",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 1, \"course\": 3, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     6000
+    ],
+    [
+     "eval",
+     "lastLap()"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "ceremony",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "ending(5)"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "credits",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "ending(9)"
+    ],
+    [
+     "wait",
+     60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  }
+ ]
+}

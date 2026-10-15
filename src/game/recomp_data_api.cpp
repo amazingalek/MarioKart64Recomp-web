@@ -2,10 +2,15 @@
 #include <mutex>
 #include <unordered_map>
 #include <unordered_set>
+#include <climits>
+#ifdef __EMSCRIPTEN__
+// Emscripten's <limits.h> defines PAGESIZE, the name of one of slot_map's template parameters.
+#undef PAGESIZE
+#endif
 
 #include "slot_map.h"
 #include "recomp_data.h"
-#include "recomp_ui.h"
+#include "recompui/recompui.h"
 #include "librecomp/helpers.hpp"
 #include "librecomp/overlays.hpp"
 #include "librecomp/addresses.hpp"

@@ -1,0 +1,9 @@
+{
+ "page": "MarioKart64Recompiled.html",
+ "load": [["until", "Device Name", 60000], ["wait", 6000]],
+ "setup": [["rom", 628, 364], ["wait", 4000]],
+ "start": [["click", 628, 364], ["wait", 3000], ["evalFile", "shader_survey.js"], ["eval", "untilMenu(10, 60000)"],
+  ["wait", 3000]],
+ "play": [["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4", 90000], ["eval", "state()"],
+  ["eval", "autopilot()"], ["wait", 40000], ["eval", "state()"]]
+}

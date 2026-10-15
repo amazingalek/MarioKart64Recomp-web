@@ -1,9 +1,9 @@
-#include "ovl_patches.hpp"
+#include "mk64.h"
 #include "../../RecompiledFuncs/recomp_overlays.inl"
 
 #include "librecomp/overlays.hpp"
 
-void zelda64::register_overlays() {
+void mk64::register_overlays() {
     recomp::overlays::overlay_section_table_data_t sections {
         .code_sections = section_table,
         .num_code_sections = ARRLEN(section_table),

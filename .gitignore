@@ -78,3 +78,15 @@ gamecontrollerdb.txt
 
 # Controller pak saves
 *.sav
+# The page and local runs
+/build*/
+/N64Recomp
+/RSPRecomp
+patches/*.d
+patches/patches.bin
+rsp/aspMain.cpp
+roms/
+portable.txt
+saves/
+mods/
+mod_config/

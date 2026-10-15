@@ -1,66 +1,87 @@
-# Building Guide
+# Building
 
-This guide will help you build the project on your local machine. The process will require you to provide a ROM of the US version of the game.
+The game's code is recompiled at build time from your own dump of Mario Kart 64 (US, big-endian `.z64`). The program,
+native or the page, then takes the same dump from its launcher's Load ROM.
 
-These steps cover: Running the recompiler and building the project.
-
-## 1. Clone the MarioKart64Recomp Repository
-This project makes use of submodules so you will need to clone the repository with the `--recurse-submodules` flag.
+## 1. Clone with the submodules
 
 ```bash
-git clone --recurse-submodules
-# if you forgot to clone with --recurse-submodules
-# cd /path/to/cloned/repo && git submodule update --init --recursive
+git clone --recurse-submodules https://github.com/amazingalek/MarioKart64Recomp-web
 ```
 
-## 2. Install Dependencies
+`lib/` holds RT64, N64ModernRuntime (with N64Recomp) and RecompFrontend from their upstream repositories, at the
+commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s web forks are built on
+(MarioKart64Recomp itself predates RecompFrontend, so its own pins are older); N64Recomp-browser, whose `patches/`
+puts the web support into their checkouts and whose `frontend/` makes the page; and the Mario Kart 64 decompilation
+(`lib/mk64`, whose headers the patches use). `MarioKart64RecompSyms` holds the symbols N64Recomp reads.
 
-### Linux
-For Linux the instructions for Ubuntu are provided, but you can find the equivalent packages for your preferred distro.
+## 2. Tools
+
+- CMake 3.20+, Ninja, clang for the program (clang-cl on Windows), SDL2 and GTK 3 on Linux
+  (`sudo apt-get install cmake ninja-build libsdl2-dev libgtk-3-dev lld llvm clang`).
+- A clang with a MIPS target and `ld.lld`, plus `make`, for the patches (`patches/`). Linux's clang has one. On Windows
+  llvm.org's clang has none: MSYS2's clang64 does, with llvm.org's `ld.lld`.
+- For the page: emsdk (`emsdk install latest`) and [naga](https://github.com/gfx-rs/wgpu/tree/trunk/naga)
+  (`cargo install naga-cli`).
+
+## 3. The recompiled code
+
+Copy your dump to the repository's root as `mk64.us.z64`, then:
 
 ```bash
-# For Ubuntu, simply run:
-sudo apt-get install cmake ninja-build libsdl2-dev libgtk-3-dev lld llvm clang
+# N64Recomp-browser's patches in lib/rt64, lib/N64ModernRuntime and lib/RecompFrontend
+cmake -P lib/N64Recomp-browser/patches/apply.cmake lib
+
+# N64Recomp and RSPRecomp, from the patched N64Recomp in lib/
+cmake -S lib/N64ModernRuntime/N64Recomp -B build-n64recomp -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build-n64recomp --target N64RecompCLI RSPRecomp
+cp build-n64recomp/N64Recomp build-n64recomp/RSPRecomp .                  # .exe on Windows
+
+./N64Recomp us.toml            # RecompiledFuncs/
+./RSPRecomp aspMain.us.toml    # rsp/aspMain.cpp
 ```
 
-### Windows
-You will need to install [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/).
-In the setup process you'll need to select the following options and tools for installation:
-- Desktop development with C++
-- C++ Clang Compiler for Windows
-- C++ CMake tools for Windows
+The native program needs the patches as much as the page does: the code the patched N64Recomp writes uses the patched
+`recomp.h` (`RECOMP_TAIL_CALL`). The web support in them is behind `__EMSCRIPTEN__` and changes nothing natively.
+Configuring the program (step 4, or the page) applies them too if they aren't in yet, and does nothing if they are;
+`git apply --reverse lib/N64Recomp-browser/patches/<name>.patch` in a checkout takes one out.
 
-The other tool necessary will be `make` which can be installe via [Chocolatey](https://chocolatey.org/):
-```bash
-choco install make
-```
+The build compiles and recompiles the patches itself (`make` in `patches/`, then `./N64Recomp patches.toml`).
 
-## 3. Generating the C code
-Copy the ROM to the root of the MarioKart64Recomp repository with this filename:
-
-- `mk64.us.z64`
-
-Now that you have the required files, you must build [N64Recomp](https://github.com/Mr-Wiseguy/N64Recomp) and run it to generate the C code to be compiled. The building instructions can be found [here](https://github.com/Mr-Wiseguy/N64Recomp?tab=readme-ov-file#building). That will build the executables: `N64Recomp` and `RSPRecomp` which you should copy to the root of the MarioKart64Recomp repository.
-
-After that, go back to the repository root, and run the following commands:
-```bash
-./N64Recomp us.toml
-./RSPRecomp aspMain.us.toml
-```
-
-## 4. Building the Project
-
-Finally, you can build the project! :rocket:
-
-On Windows, you can open the repository folder with Visual Studio, and you'll be able to `[build / run / debug]` the project from there.
-
-If you prefer the command line or you're on a Unix platform you can build the project using CMake:
+## 4. Native
 
 ```bash
-cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G Ninja -DCMAKE_BUILD_TYPE=Release # or Debug if you want to debug
-cmake --build build-cmake --target MarioKart64Recompiled -j$(nproc) --config Release # or Debug
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+    -DPATCHES_C_COMPILER=<clang with a MIPS target> -DPATCHES_LD=<ld.lld>    # clang-cl for the program on Windows
+cmake --build build --target MarioKart64Recompiled
 ```
 
-## 5. Success
+Run it from the repository's root (it reads `assets/`). A `portable.txt` there keeps settings, saves and the stored
+ROM beside it.
 
-Voilà! You should now have a `MarioKart64Recompiled` executable in the build directory! If you used Visual Studio this will be `out/build/x64-[Configuration]` and if you used the provided CMake commands then this will be `build-cmake`. You will need to run the executable out of the root folder of this project or copy the assets folder to the build folder to run it.
+## The web page
+
+```bash
+embuilder build sdl2-mt freetype-legacysjlj      # once
+emcmake cmake -S . -B build-web -G Ninja -DCMAKE_BUILD_TYPE=Release -DRT64_NAGA_EXECUTABLE=<naga> \
+    -DPATCHES_C_COMPILER=<clang with a MIPS target> -DPATCHES_LD=<ld.lld>
+cmake --build build-web --target MarioKart64Recompiled
+```
+
+Keep `build-web` inside the checkout and put [ccache](https://ccache.dev) on `PATH`: N64Recomp-browser's
+`frontend/build_speed.cmake` puts it in front of every compile, and a second fresh build dir then compiles almost
+nothing. emsdk's clang has no MIPS target, so the patches are compiled with the host's clang (`PATCHES_C_COMPILER`).
+
+`build-web/MarioKart64Recompiled.html` must be served with `Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp` (threads need SharedArrayBuffer), or with `coi_serviceworker.js` beside
+it where headers can't be set. Open it in a browser with WebGPU and pick your dump with Load ROM: it is kept in the
+browser's storage, with settings and saves.
+
+### The shader list
+
+The page specializes the shaders in `src/rt64_shaders.txt` at build time (`RT64_PREBUILT_SHADER_LIST`), so that it
+never draws with RT64's slow general shader. The list is recorded by `tools/record_shaders.sh <build-web> <rom>`, which
+plays `tools/shader_plan.json` with N64Recomp-browser's `tools/record_shaders.mjs`: the page opened with
+`?record-shaders` prints every shader the game asks for, and the plan reaches each part of the game by code
+(`tools/shader_survey.js`, which starts any course in any mode the way the pause menu's Retry does and hands the karts
+to the game's own driving). Its header says what was played and what wasn't.

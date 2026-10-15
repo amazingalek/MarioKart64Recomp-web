@@ -109,9 +109,9 @@ launcher, Load ROM, the logos and the title, the menus to a 50cc Grand Prix, the
 The game draws 30 frames a second in a race, which RT64 interpolates to the display's rate. The build before it was
 published, served locally, played the same (Chrome 59.6, Firefox 59.4 after waits of 0.4 and 1.5 s). Chrome builds the
 whole list behind the game, so it never waits; Firefox builds none during play, and waits for a section when the game
-gets there. A shot of the race in each browser shows the jumbotron over the start line drawing the player's kart.
+gets there. A shot of the race in each browser shows Luigi Raceway's jumbotron drawing the race.
 
-Also played in headless Chrome 155 on local builds: every course and arena through the shader plan, Versus with two,
+Also played in headless Chrome 155 on local builds: every course and arena (recording the shader list), Versus with two,
 three and four players (59.1-59.4 presents a second with four), a four-player battle in Big Donut, Time Trials, the
 results, the award ceremony and the credits, with no WebGPU errors.
 

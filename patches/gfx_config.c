@@ -69,12 +69,16 @@ RECOMP_PATCH void create_gfx_task_structure(void) {
 }
 #endif
 
-#if 0
+// The boot's first display list goes in the extended pool too, where create_gfx_task_structure points its task: left
+// in gGfxPool->gfxPool, the task pointed RT64 at a pool of zeros, which it read on into the next pool while the game
+// was still writing the next frame there, and it hung or crashed on what it found in about one boot in twenty on the
+// web page (an empty display list, or a microcode load from garbage).
 RECOMP_PATCH void rendering_init(void) {
     gGfxPool = &gGfxPools[0];
     set_segment_base_addr(1, gGfxPool);
     gGfxSPTask = &gGfxPool->spTask;
-    gDisplayListHead = gGfxPool->gfxPool;
+    // gDisplayListHead = gGfxPool->gfxPool;
+    gDisplayListHead = gfxPoolExtended[gGlobalTimer & 1]; // @recomp
     init_rcp();
     clear_framebuffer(0);
     end_master_display_list();
@@ -82,7 +86,6 @@ RECOMP_PATCH void rendering_init(void) {
     sRenderingFramebuffer++;
     gGlobalTimer++;
 }
-#endif
 
 /**
  * Inserts matrix into the rsp. Position, rotation and mode of where to render the next object and check number of

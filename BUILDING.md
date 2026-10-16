@@ -86,41 +86,15 @@ plays `tools/shader_plan.json` with N64Recomp-browser's `tools/record_shaders.mj
 (`tools/shader_survey.js`, which starts any course in any mode the way the pause menu's Retry does and hands the karts
 to the game's own driving). Its header says what was played and what wasn't.
 
-## What was played
+## What porting it found
 
-The page from GitHub Pages (main 9f6bcf3, N64Recomp-browser 28a5f14), cold, on an RTX 2070, an idle host, 2026-10-15,
-Chrome 155 headless and Firefox 158, by N64Recomp-browser's `tools/play_page.mjs` with `tools/play_plan.json`: the
-launcher, Load ROM, the logos and the title, the menus to a 50cc Grand Prix, then 40 s of Luigi Raceway on the kart AI.
+How the page plays is recorded in N64Recomp-browser's
+[plays.jsonl](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/amazingalek/N64Recomp-browser#games).
 
-```
-                  shader waits                      presents a second   sound short   WebGPU errors
-1256x645
-  Chrome          none                              59.6 (53-60)        0             0
-  Firefox         0.4 s for the boot's 8 before     59.2 (31-60)        0             0
-                  the first frame, 1.6 s for Luigi
-                  Raceway's 35, ~0.3 s in ones and
-                  twos through the menus
-3840x2000
-  Chrome          none                              59.6 (53-60)        0             0
-  Firefox         0.5 s, 1.6 s, as above            59.0 (28-60)        1,041, in the   0
-                                                                        course's wait
-```
-
-The game draws 30 frames a second in a race, which RT64 interpolates to the display's rate. The build before it was
-published, served locally, played the same (Chrome 59.6, Firefox 59.4 after waits of 0.4 and 1.5 s). Chrome builds the
-whole list behind the game, so it never waits; Firefox builds none during play, and waits for a section when the game
-gets there. A shot of the race in each browser shows Luigi Raceway's jumbotron drawing the race.
-
-Played on N64Recomp-browser v0.50.0 (main 2f1bb13 built with its pin moved there, served locally) on 2026-10-16, RTX
-2070, a fresh profile each, one page at a time, a quiet host, by `tools/play_plan.json` with `play_page.mjs`: at
-1256x645 headless Chrome 155 never waited and drew 55.6 presents a second (median; headless Chrome drew about 56 frames
-a second that night: four games played from Pages beside their builds, as a control, read 54.8-55.6 too), Firefox 158
-waited 2.0 s and drew 60.2; uncapped at 3840x2000 (`--uncapped --play 25`, the first such run) Chrome drew 346.2, at the
-uncapped rate's ceiling, and Firefox 333.7 after 2.1 s. No sound short and no WebGPU errors.
-
-Also played in headless Chrome 155 on local builds: every course and arena (recording the shader list), Versus with two,
-three and four players (59.1-59.4 presents a second with four), a four-player battle in Big Donut, Time Trials, the
-results, the award ceremony and the credits, with no WebGPU errors.
+The game draws 30 frames a second in a race, which RT64 interpolates to the display's rate. Chrome builds the whole
+shader list behind the game, so it never waits for it; Firefox builds none during play, and waits for a section when
+the game gets there.
 
 **The boot.** Upstream's patches write every frame's display list to a larger pool of their own (`gfxPoolExtended`)
 and point its task there, but the boot's first list was written to the game's own pool, so the first task pointed RT64
@@ -129,9 +103,10 @@ twenty on the page hung (an empty display list) or crashed (a microcode load rea
 patches `rendering_init` to write it where the task points: 80 boots in a row in headless Chrome after it, none failed.
 
 **Render to RAM** stays on, with the exact copy: the jumbotron at Luigi Raceway and Wario Stadium is the last frame,
-which the CPU copies out of RDRAM (`copy_framebuffer`). The late copy (`set_render_to_ram_late`, which waits less for
-the GPU on some games) measured the same here: a race 59.6 presents a second either way, four players 59.1 exact and
-58.8 late (headless Chrome 155, a busy host, the game's 30 frames a second), so the page keeps the exact one.
+which the CPU copies out of RDRAM (`copy_framebuffer`), and the page draws it in both browsers. The late copy
+(`set_render_to_ram_late`, which waits less for the GPU on some games) measured the same here: a race 59.6 presents a
+second either way, four players 59.1 exact and 58.8 late (headless Chrome 155, a busy host, the game's 30 frames a
+second), so the page keeps the exact one.
 
 **The shader list**, `src/rt64_shaders.txt`: 813 descriptions, 136 shaders and 112 pipelines in 27 sections (the boot 8,
 the menus 8, each course, the arenas, Versus, Time Trials, the results, the ceremony, the credits).

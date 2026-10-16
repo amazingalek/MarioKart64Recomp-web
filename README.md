@@ -31,7 +31,10 @@ or two behind.
 - The page takes no mods (a browser can't load recompiled code at run time), and builds the game's shaders before it
   draws with them, from `src/rt64_shaders.txt`.
 
-What was played on the page and how it measured is in [BUILDING.md](BUILDING.md#what-was-played).
+How the page plays is recorded in N64Recomp-browser's
+[plays.jsonl](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/amazingalek/N64Recomp-browser#games); what porting it found is in
+[BUILDING.md](BUILDING.md#what-porting-it-found).
 
 # MarioKart 64: Recompiled
 MarioKart 64: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** MarioKart 64 into a native port with many new features and enhancements. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide some of these enhancements.

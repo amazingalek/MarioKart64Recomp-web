@@ -102,6 +102,17 @@ at an empty one, which it read on into the pool where the game was already writi
 twenty on the page hung (an empty display list) or crashed (a microcode load read from garbage). `patches/gfx_config.c`
 patches `rendering_init` to write it where the task points: 80 boots in a row in headless Chrome after it, none failed.
 
+**The pause before and at a race's start** (0.43-0.55 s with no new frame) is the game's own, and a console's too.
+Each time the game changes its sound set it calls `audio_reset_session_eu`, which hands the audio thread the new
+preset and blocks the game thread until the audio thread says the session is rebuilt. The audio thread makes one audio
+frame a retrace (the presets' `unk1` is 1) and steps through `audio_shut_down_and_reset_step` over 29 of them:
+disable the sequence players, fade the reverb 4 frames, release the notes and wait 16, clear the AI buffers and wait 4,
+then rebuild the heap. That is 28-29 retraces, 467-484 ms, which is the 468-475 ms the page waited. Every retrace
+reached the scheduler: one dropped would have made the reset a frame longer. Natively, as on the page, the runtime's
+VI thread drives the retraces at 60 a second, so a native build waits as long. A sampled CPU profile shows the
+scheduler and the audio thread in one long `osRecvMesg`, because each retrace wakes them for microseconds, less than
+a sample.
+
 **Render to RAM** stays on, with the exact copy: the jumbotron at Luigi Raceway and Wario Stadium is the last frame,
 which the CPU copies out of RDRAM (`copy_framebuffer`), and the page draws it in both browsers. The late copy
 (`set_render_to_ram_late`, which waits less for the GPU on some games) measured the same here: a race 59.6 presents a

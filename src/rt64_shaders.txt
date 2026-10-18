@@ -8,9 +8,11 @@
 # tools/record_shaders.mjs with tools/shader_plan.json, which loads the page fresh for each section and has
 # tools/shader_survey.js start each race the way the pause menu's Retry does, with the kart AI driving. Section 0 is
 # the launcher, the logos and the title; then the menus to a Grand Prix's first race, each course at 150cc for a lap
-# or more, each battle arena with four players, Versus with two and three, Time Trials, a race's finish and results,
-# the award ceremony and the credits. Not recorded: the menus past those a Grand Prix passes through (options, data,
-# records), mirror mode, ghosts, and what a course draws further in than the AI drove. Flags follow settings
+# or more, each battle arena with four players, Versus with two, three and four (DK's Jungle Parkway), Time Trials, a
+# race's finish and results (Mario Raceway, and Banshee Boardwalk at 150cc), Bowser's Castle in mirror mode, the
+# award ceremony and the credits; a section the plan names twice is one section here, recorded a load each. Not
+# recorded: the menus past those a Grand Prix passes through (options, data, records), mirror mode on the other
+# courses, ghosts, and what a course draws further in than the AI drove. Flags follow settings
 # (filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording again.
 0f0a4000 00882cff fcffffff fffe793c 0800000b
 00552078 00882cff fcffffff fffcf87c 088a000c
@@ -494,6 +496,8 @@ section bowser
 00552078 00882cff fc121824 ff33ffff 0ccb540c
 00553078 00882cff fc119623 ff2fffff 0ccb540c
 00504b53 00882cff fc309661 552eff7f 0ccb540c
+00504240 00800cff fcff97ff ff2dfeff 0333320b
+00504a53 0088acff fc60b2c1 5565feff 0ccb540c
 section dkjungle
 0f0a4000 00882cff fcffffff fffe793c 0800000c
 00553078 00882cff fc127e24 fffff3f9 0ccb5408
@@ -617,6 +621,9 @@ c8113078 00982cff fcffffff fffe793c 0800000c
 00553078 0088acff fcffffff fffcf279 0b33320c
 00553078 0088acff fcffffff fffcf279 0ccb5408
 00504b50 0088acff fcffffff fffe793c 08000008
+00504240 00802cff fcffffff fffdf6fb 0800000b
+00504240 00882cff fcff97ff ff2e7f3f 0ccb540c
+00504340 00802cff fcffffff fffe793c 0800000c
 section rainbow
 00504240 00882cff fcff97ff ff2dfeff 0ccb540c
 00552078 0088acff fcffffff fffcf279 0ccb540c
@@ -744,6 +751,8 @@ c8112078 00982cff fc127fff fffff838 0bba440c
 c8112078 00982cff fc127fff fffff838 0ccb540c
 00553078 0088acff fcffffff fffcf279 0b33320c
 004045d8 00882cff fc121824 ff33ffff 088a0008
+0f0a7008 0088acff fcffffff fffcf279 0ccb540c
+005049db 0088acff fc119623 ff2fffff 0ccb540c
 section trials
 00504240 00882cff fcffffff fffdf2f9 0ccb540c
 0f0a4000 00882cff fcffffff fffe793c 0800000c

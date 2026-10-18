@@ -2,11 +2,12 @@
 // (tools/play_plan.json), with n64r and n64w, RDRAM words at N64 addresses. Offers the game's own ways to a course,
 // read and written in RDRAM (the US ROM's addresses, from the mk64 decompilation):
 //
-//   race({ mode, players, screen, cc, cup, course, id })  from a race, starts another the way the pause menu's Retry
-//       does (gGotoMode RACING through the quit transition, func_802903B0), after setting what the menus would: the
-//       mode (0 Grand Prix, 1 Time Trials, 2 Versus, 3 Battle), the players and screen mode (1 one, 1 two above each
-//       other, 2 two side by side, 3 three or four), the class, and the course: a cup and its course for a Grand Prix
-//       (setup_race picks it from gCupCourseOrder), a course id otherwise. Resolves once the course is loaded.
+//   race({ mode, players, screen, cc, cup, course, id, mirror })  from a race, starts another the way the pause menu's
+//       Retry does (gGotoMode RACING through the quit transition, func_802903B0), after setting what the menus would:
+//       the mode (0 Grand Prix, 1 Time Trials, 2 Versus, 3 Battle), the players and screen mode (1 one, 1 two above
+//       each other, 2 two side by side, 3 three or four), the class (3 Extra), mirror mode (gIsMirrorMode, on with
+//       Extra in the menus), and the course: a cup and its course for a Grand Prix (setup_race picks it from
+//       gCupCourseOrder), a course id otherwise. Resolves once the course is loaded.
 //   autopilot()  hands the human players to the game's kart AI, as the attract demo has player one (PLAYER_KART_AI),
 //       so a race drives itself and the camera follows a kart round the course.
 //   ending(state)  from a race, goes to the award ceremony (5) or the credits (9) through the same quit transition.
@@ -36,7 +37,8 @@
   const gGamestate = 0x800DC50C, gGamestateNext = 0x800DC524, gScreenModeSelection = 0x800DC530;
   const gModeSelection = 0x800DC53C, gCCSelection = 0x800DC548, gCurrentCourseId = 0x800DC5A0;
   const gCurrentlyLoadedCourseId = 0x800DC5A4, gIsInQuitToMenuTransition = 0x800DC5C0;
-  const gQuitToMenuTransitionCounter = 0x800DC5C4, gMenuSelection = 0x800E86A0, gPlayers = 0x800F6990;
+  const gQuitToMenuTransitionCounter = 0x800DC5C4, gIsMirrorMode = 0x800DC604, gMenuSelection = 0x800E86A0;
+  const gPlayers = 0x800F6990;
   const gGotoMode = 0x80150124, gPlayerCount = 0x8018EDF3, gCupSelection = 0x8018EE09, gCourseIndexInCup = 0x8018EE0B;
   const gLapCountByPlayerId = 0x80164390;
   const playerSize = 0xDD8, RACING = 4, PLAYER_HUMAN = 0x4000, PLAYER_KART_AI = 0x1000;
@@ -52,13 +54,14 @@
     wh(gIsInQuitToMenuTransition, 1);
   };
 
-  window.race = async ({ mode = 0, players = 1, screen = 0, cc = 0, cup = 0, course = 0, id } = {}) => {
+  window.race = async ({ mode = 0, players = 1, screen = 0, cc = 0, cup = 0, course = 0, id, mirror = 0 } = {}) => {
     if (word(gGamestate) !== RACING) return 'not in a race: ' + state();
     const target = (mode === 0) ? cupCourses[cup][course] : id;
     n64w(gModeSelection, mode);
     wb(gPlayerCount, players);
     n64w(gScreenModeSelection, screen);
     n64w(gCCSelection, cc);
+    n64w(gIsMirrorMode, mirror);
     wb(gCupSelection, cup);
     wb(gCourseIndexInCup, course);
     wh(gCurrentCourseId, target);

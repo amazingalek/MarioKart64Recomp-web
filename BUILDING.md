@@ -119,5 +119,5 @@ which the CPU copies out of RDRAM (`copy_framebuffer`), and the page draws it in
 second either way, four players 59.1 exact and 58.8 late (headless Chrome 155, a busy host, the game's 30 frames a
 second), so the page keeps the exact one.
 
-**The shader list**, `src/rt64_shaders.txt`: 813 descriptions, 136 shaders and 112 pipelines in 27 sections (the boot 8,
-the menus 8, each course, the arenas, Versus, Time Trials, the results, the ceremony, the credits).
+**The shader list**, `src/rt64_shaders.txt`: 820 descriptions, 143 shaders (112 pipelines for the 136 recorded first) in 27 sections
+(the boot 8, the menus 8, each course, the arenas, Versus, Time Trials, the results, the ceremony, the credits).

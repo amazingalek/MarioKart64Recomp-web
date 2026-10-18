@@ -11,9 +11,11 @@
   "tools/record_shaders.mjs with tools/shader_plan.json, which loads the page fresh for each section and has",
   "tools/shader_survey.js start each race the way the pause menu's Retry does, with the kart AI driving. Section 0 is",
   "the launcher, the logos and the title; then the menus to a Grand Prix's first race, each course at 150cc for a lap",
-  "or more, each battle arena with four players, Versus with two and three, Time Trials, a race's finish and results,",
-  "the award ceremony and the credits. Not recorded: the menus past those a Grand Prix passes through (options, data,",
-  "records), mirror mode, ghosts, and what a course draws further in than the AI drove. Flags follow settings",
+  "or more, each battle arena with four players, Versus with two, three and four (DK's Jungle Parkway), Time Trials, a",
+  "race's finish and results (Mario Raceway, and Banshee Boardwalk at 150cc), Bowser's Castle in mirror mode, the",
+  "award ceremony and the credits; a section the plan names twice is one section here, recorded a load each. Not",
+  "recorded: the menus past those a Grand Prix passes through (options, data, records), mirror mode on the other",
+  "courses, ghosts, and what a course draws further in than the AI drove. Flags follow settings",
   "(filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording again."
  ],
  "load": [
@@ -606,6 +608,49 @@
    ]
   },
   {
+   "name": "bowser",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 2, \"course\": 3, \"cc\": 3, \"mirror\": 1})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     55000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
    "name": "dkjungle",
    "steps": [
     [
@@ -727,6 +772,57 @@
     [
      "wait",
      60000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "banshee",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"cup\": 3, \"course\": 2, \"cc\": 2})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     20000
+    ],
+    [
+     "eval",
+     "lastLap()"
+    ],
+    [
+     "wait",
+     80000
     ],
     [
      "eval",
@@ -1001,6 +1097,49 @@
     [
      "wait",
      25000
+    ],
+    [
+     "eval",
+     "state()"
+    ]
+   ]
+  },
+  {
+   "name": "versus",
+   "steps": [
+    [
+     "keep",
+     false
+    ],
+    [
+     "pressUntil",
+     "Space",
+     " ",
+     32,
+     100,
+     700,
+     "n64r(0x800DC50C) === 4",
+     90000
+    ],
+    [
+     "eval",
+     "state()"
+    ],
+    [
+     "keep",
+     true
+    ],
+    [
+     "eval",
+     "race({\"mode\": 2, \"players\": 4, \"screen\": 3, \"cc\": 2, \"id\": 18})"
+    ],
+    [
+     "eval",
+     "autopilot()"
+    ],
+    [
+     "wait",
+     50000
     ],
     [
      "eval",

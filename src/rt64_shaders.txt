@@ -498,6 +498,7 @@ section bowser
 00504b53 00882cff fc309661 552eff7f 0ccb540c
 00504240 00800cff fcff97ff ff2dfeff 0333320b
 00504a53 0088acff fc60b2c1 5565feff 0ccb540c
+0f0a4000 00802cff fcffffff fffe793c 0800000b
 section dkjungle
 0f0a4000 00882cff fcffffff fffe793c 0800000c
 00553078 00882cff fc127e24 fffff3f9 0ccb5408

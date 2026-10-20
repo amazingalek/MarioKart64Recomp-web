@@ -12,8 +12,10 @@
 # race's finish and results (Mario Raceway, and Banshee Boardwalk at 150cc), Bowser's Castle in mirror mode, the
 # award ceremony and the credits; a section the plan names twice is one section here, recorded a load each. Not
 # recorded: the menus past those a Grand Prix passes through (options, data, records), mirror mode on the other
-# courses, ghosts, and what a course draws further in than the AI drove. Flags follow settings
-# (filtering, HDR, MSAA, upscaling), so a change to one of those defaults means recording again.
+# courses, ghosts, and what a course draws further in than the AI drove. The results section's last three are
+# tools/play_plan.json's misses in Chrome and Firefox: a Grand Prix's first race's finish, its results and the
+# next course's start, played in one load as a player goes on with a cup. Flags follow settings (filtering, HDR,
+# MSAA, upscaling), so a change to one of those defaults means recording again.
 0f0a4000 00882cff fcffffff fffe793c 0800000b
 00552078 00882cff fcffffff fffcf87c 088a000c
 00504240 00882cff fcffffff fffdf6fb 0800000b
@@ -809,6 +811,9 @@ section results
 00504240 00800cff fcff97ff ff2dfeff 04cb540b
 00504240 00800cff fc60b2c1 5565feff 04cbfe0b
 00504240 00800cff fc119623 ff2fffff 04cbfe0b
+00553078 00882cff fc127e24 fffff3f9 0bba440c
+00504240 00802cff fcff99ff ff327f3f 0ccb540b
+00552078 00882cff fc127e24 fffff9fc 0a22220c
 section ceremony
 0f0a4000 00882cff fcffffff fffe793c 08000008
 0f0a4000 00882cff fcffffff fffe793c 0800000c

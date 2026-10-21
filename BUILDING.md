@@ -86,6 +86,12 @@ plays `tools/shader_plan.json` with N64Recomp-browser's `tools/record_shaders.mj
 (`tools/shader_survey.js`, which starts any course in any mode the way the pause menu's Retry does and hands the karts
 to the game's own driving). Its header says what was played and what wasn't.
 
+`tools/play_plan.json` is the page's regular play, 2-3 minutes with every timeout counted, which N64Recomp-browser's
+`tools/play_page.mjs` plays to measure the page: the menus to a 50cc Grand Prix's first race, Luigi Raceway, driven a
+minute by the game's kart AI. `tools/play_plan_extended.json`, at most 5 minutes, goes on through that race's finish and
+results to Moo Moo Farm, for when a longer play is needed, and the shaders it misses go into the list. Each plan's
+header says what it plays.
+
 ## What porting it found
 
 How the page plays is recorded in N64Recomp-browser's

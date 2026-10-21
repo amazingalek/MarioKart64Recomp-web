@@ -1,50 +1,36 @@
 {
   "header": [
-    "Plays Mario Kart 64 the way a player starts it, for N64Recomp-browser's tools/play_page.mjs: the title, then A pressed",
-    "through the menus to a 50cc Grand Prix's first race (Mushroom Cup, Luigi Raceway), driven by the game's kart AI",
-    "(tools/shader_survey.js's autopilot()), then the cup as a player goes on with it: each race put on its last lap",
-    "(lastLap()), its finish and results passed with A until the next course is loaded, and that one driven 30 s too, to",
-    "Moo Moo Farm and Koopa Troopa Beach. The AI drives, so nothing here is timed on the game's clock."
+    "Mario Kart 64's regular plan for N64Recomp-browser's tools/play_page.mjs, 2-3 minutes with every timeout counted: the",
+    "launcher, Load ROM once the page has its shader list (Chrome builds the whole list behind the launcher and says when",
+    "it is done, and a click while it builds is lost; Firefox builds none there, and says so as the launcher comes up), the",
+    "title, then A pressed through the menus to a 50cc Grand Prix's first race (Mushroom Cup, Luigi Raceway) the way a",
+    "player starts it, a need that the race is on, driven 60 s by the game's kart AI (tools/shader_survey.js's",
+    "autopilot()). The AI drives, so nothing here is timed on the game's clock. tools/play_plan_extended.json goes on",
+    "through the race's finish and results to Moo Moo Farm, for when a longer play is needed."
   ],
   "page": "MarioKart64Recompiled.html",
   "load": [
-    ["until", "Device Name", 60000],
-    ["wait", 6000]
+    ["until", "RT64: all \\d+ prebuilt shaders built|once the game draws", 45000],
+    ["wait", 3000]
   ],
   "setup": [
     ["rom", 628, 364],
-    ["wait", 4000]
+    ["wait", 3000]
   ],
   "start": [
     ["click", 628, 364],
     ["wait", 3000],
     ["evalFile", "shader_survey.js"],
-    ["eval", "untilMenu(10, 60000)"],
+    ["eval", "untilMenu(10, 30000)"],
     ["wait", 3000]
   ],
   "play": [
-    ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4", 90000],
-    ["eval", "state()"],
+    ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4", 20000],
+    ["need", "n64r(0x800DC50C) === 4 && (n64r(0x800DC5A4) >>> 16) === 8 && state()"],
     ["eval", "autopilot()"],
     ["wait", 8000],
     ["shot", "luigi.png"],
-    ["wait", 22000],
-    ["eval", "state()"],
-    ["eval", "lastLap()"],
-    ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4 && (n64r(0x800DC5A4) >>> 16) === 9", 150000],
-    ["eval", "state()"],
-    ["eval", "autopilot()"],
-    ["wait", 8000],
-    ["shot", "moomoo.png"],
-    ["wait", 22000],
-    ["eval", "state()"],
-    ["eval", "lastLap()"],
-    ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4 && (n64r(0x800DC5A4) >>> 16) === 6", 150000],
-    ["eval", "state()"],
-    ["eval", "autopilot()"],
-    ["wait", 8000],
-    ["shot", "koopa.png"],
-    ["wait", 22000],
+    ["wait", 52000],
     ["eval", "state()"]
   ]
 }

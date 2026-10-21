@@ -3,7 +3,7 @@
     "Plays Mario Kart 64 the way a player starts it, for N64Recomp-browser's tools/play_page.mjs: the title, then A pressed",
     "through the menus to a 50cc Grand Prix's first race (Mushroom Cup, Luigi Raceway), driven by the game's kart AI",
     "(tools/shader_survey.js's autopilot()), then the cup as a player goes on with it: each race put on its last lap",
-    "(lastLap()), its finish and results passed with A until the next course is loaded, and that one driven 40 s too, to",
+    "(lastLap()), its finish and results passed with A until the next course is loaded, and that one driven 30 s too, to",
     "Moo Moo Farm and Koopa Troopa Beach. The AI drives, so nothing here is timed on the game's clock."
   ],
   "page": "MarioKart64Recompiled.html",
@@ -28,7 +28,7 @@
     ["eval", "autopilot()"],
     ["wait", 8000],
     ["shot", "luigi.png"],
-    ["wait", 32000],
+    ["wait", 22000],
     ["eval", "state()"],
     ["eval", "lastLap()"],
     ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4 && (n64r(0x800DC5A4) >>> 16) === 9", 150000],
@@ -36,7 +36,7 @@
     ["eval", "autopilot()"],
     ["wait", 8000],
     ["shot", "moomoo.png"],
-    ["wait", 32000],
+    ["wait", 22000],
     ["eval", "state()"],
     ["eval", "lastLap()"],
     ["pressUntil", "Space", " ", 32, 100, 700, "n64r(0x800DC50C) === 4 && (n64r(0x800DC5A4) >>> 16) === 6", 150000],
@@ -44,7 +44,7 @@
     ["eval", "autopilot()"],
     ["wait", 8000],
     ["shot", "koopa.png"],
-    ["wait", 32000],
+    ["wait", 22000],
     ["eval", "state()"]
   ]
 }

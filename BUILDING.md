@@ -6,11 +6,11 @@ native or the page, then takes the same dump from its launcher's Load ROM.
 ## 1. Clone with the submodules
 
 ```bash
-git clone --recurse-submodules https://github.com/amazingalek/MarioKart64Recomp-web
+git clone --recurse-submodules https://github.com/n64hub/MarioKart64Recomp-web
 ```
 
 `lib/` holds RT64, N64ModernRuntime (with N64Recomp) and RecompFrontend from their upstream repositories, at the
-commits [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)'s web forks are built on
+commits [N64Recomp-browser](https://github.com/n64hub/N64Recomp-browser)'s web forks are built on
 (MarioKart64Recomp itself predates RecompFrontend, so its own pins are older); N64Recomp-browser, whose `patches/`
 puts the web support into their checkouts and whose `frontend/` makes the page; and the Mario Kart 64 decompilation
 (`lib/mk64`, whose headers the patches use). `MarioKart64RecompSyms` holds the symbols N64Recomp reads.
@@ -95,8 +95,8 @@ header says what it plays.
 ## What porting it found
 
 How the page plays is recorded in N64Recomp-browser's
-[plays.jsonl](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
-[games table](https://github.com/amazingalek/N64Recomp-browser#games).
+[plays.jsonl](https://github.com/n64hub/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/n64hub/N64Recomp-browser#games).
 
 The game draws 30 frames a second in a race, which RT64 interpolates to the display's rate. Chrome builds the whole
 shader list behind the game, so it never waits for it; Firefox builds none during play, and waits for a section when

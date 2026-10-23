@@ -1,17 +1,17 @@
 # MarioKart 64: Recompiled, on the web
 
 > [!WARNING]
-> **This is amazingalek/MarioKart64Recomp-web, a fork, not MarioKart64Recomp.** Its `main` branch is sonicdcer's
+> **This is n64hub/MarioKart64Recomp-web, a fork, not MarioKart64Recomp.** Its `main` branch is sonicdcer's
 > [MarioKart64Recomp](https://github.com/sonicdcer/MarioKart64Recomp) moved onto
 > [RecompFrontend](https://github.com/N64Recomp/RecompFrontend) and built into a web page (WebGPU, through
-> [N64Recomp-browser](https://github.com/amazingalek/N64Recomp-browser)), and everything on it past sonicdcer's commits
+> [N64Recomp-browser](https://github.com/n64hub/N64Recomp-browser)), and everything on it past sonicdcer's commits
 > was written by AI (Claude). It is not made, endorsed or supported by MarioKart64Recomp's authors: nothing here is
 > offered upstream, and please don't take issues with this fork to them. Building it: [BUILDING.md](BUILDING.md).
 >
 > This port is here to build out and test N64Recomp-browser's web support on another game than the one it was written
 > for: what it turns up is fixed there where it can be, so every recomp's page gets the fix.
 
-**Play it in the browser: https://amazingalek.github.io/MarioKart64Recomp-web/**, with your own dump of Mario Kart 64
+**Play it in the browser: https://n64hub.com/mario-kart-64/**, with your own dump of Mario Kart 64
 (US), picked in the launcher and kept in the browser. It needs WebGPU (Chrome or Edge 113 and up, or Firefox). The
 page is built from this branch and published with N64Recomp-browser's `tools/publish_page.sh`, so it can be a commit
 or two behind.
@@ -32,8 +32,8 @@ or two behind.
   draws with them, from `src/rt64_shaders.txt`.
 
 How the page plays is recorded in N64Recomp-browser's
-[plays.jsonl](https://github.com/amazingalek/N64Recomp-browser/blob/main/plays.jsonl) and its
-[games table](https://github.com/amazingalek/N64Recomp-browser#games); what porting it found is in
+[plays.jsonl](https://github.com/n64hub/N64Recomp-browser/blob/main/plays.jsonl) and its
+[games table](https://github.com/n64hub/N64Recomp-browser#games); what porting it found is in
 [BUILDING.md](BUILDING.md#what-porting-it-found).
 
 # MarioKart 64: Recompiled
